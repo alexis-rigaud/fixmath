@@ -1,42 +1,27 @@
-%  Copyright (C) 2005-2009, Axis Communications AB, LUND, SWEDEN
+%  Copyright (C) 2005-2011, Axis Communications AB, LUND, SWEDEN
+%  Copyright (C) 2024, Alexis Rigaud
 %
-%  This file is part of Fixmath.
+%  SPDX-License-Identifier: LGPL-3.0-or-later
+%  SPDX-License-Identifier: GFDL-1.3-or-later
 %
-%  Fixmath is free software: you can redistribute it and/or modify
-%  it under the terms of the GNU Lesser General Public License as published
-%  by the Free Software Foundation, either version 3 of the License, or
-%  (at your option) any later version. You can use the comments under either
-%  the terms of the GNU Lesser General Public License version 3 or
-%  later, or the GNU Free Documentation License version 1.3 or later.
-%
-%  Fixmath is distributed in the hope that it will be useful,
-%  but WITHOUT ANY WARRANTY; without even the implied warranty of
-%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-%  GNU Lesser General Public License for more details.
-%
-%  You should have received a copy of the GNU Lesser General Public
-%  License and a copy of the GNU Free Documentation License along
-%  with Fixmath. If not, see <http://www.gnu.org/licenses/>.
-%
-
 %
 % Remez' algorithm for function approximation.
 %
-% poly = remez(x, y, order, verbose) 
+% poly = remez(x, y, order, verbose)
 %
 %   x       An array of evenly distributed sample points of the function f.
 %   y       An array of sampled function values.
 %   order   The order of the polynom to approximate the function.
-%   verbose Verbosity boolean. Supply a non-zero value to step 
-%           interactivly through the iterations and plot data. 
-%   poly    The computed approximation polygon coefficients.   
+%   verbose Verbosity boolean. Supply a non-zero value to step
+%           interactivly through the iterations and plot data.
+%   poly    The computed approximation polygon coefficients.
 
 function [poly, err] = remez(x, y, order, verbose)
 
     % Create the initial distribution of control points
     p = round(linspace(1, length(x), order + 2));
-    
-    % Initialize error variables 
+
+    % Initialize error variables
     err = 1;
     old = 0;
 
@@ -48,7 +33,7 @@ function [poly, err] = remez(x, y, order, verbose)
         [poly, eps] = solve(x(p), y(p));
         res = y - polyval(poly, x);
 
-        % Find the extreme points on the residual curve  
+        % Find the extreme points on the residual curve
         ext = extrema(res);
 
         % Find the maximum absolute error
@@ -57,7 +42,7 @@ function [poly, err] = remez(x, y, order, verbose)
 
         % Locate the closest extreme point
 	[q, j] = min(abs(ext - i));
-        
+
         % Move the corresponding control point
         p(j) = i;
 
@@ -94,7 +79,7 @@ function [poly, eps] = solve(xp, yp, mask)
         for i = 1:(len - 2)
             row = [row xp(k)^i];
         end
-    
+
         sys = [sys; row];
     end
 

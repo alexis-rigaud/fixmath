@@ -1,16 +1,26 @@
 # Fixmath
 
-This is a reboot of Fixmath library (from v1.4).
+Fixed-point math library, using signed 32-bit Qn.m format with n+m = 31
 
-- [x] cleanup
-- [ ] move to CMake instead of autotools
-- [x] README
-- [x] LICENCE
-- [x] COPYRIGHT
-- [ ] is building
-- [ ] is linking
-- [ ] is tested
-- [ ] is documented
+This is a reboot of Fixmath library using modern environement.
+
+## Example (Q15.16)
+```c
+fixed_t norm2(fixed_t *buf, int len)
+{
+    fixed_t sum = 0;
+    int     k;
+    for (k = 0; k < len; k++) {
+        fixed_t val = buf[k];
+        sum += fx_mulx(val, val, 16);
+    }
+    return fx_sqrtx(sum, 16);
+}
+```
+## Matlab 
+Under the tools dir :
+- remez.m : an implementation of the Remez algorithm for function approximation
+- encode.m : fixed point encoding of the obtained coefs
 
 ## Origin
 From :
@@ -19,59 +29,15 @@ From :
 - [src](http://download-mirror.savannah.gnu.org/releases/fixmath/)
 - [git](https://git.savannah.nongnu.org/cgit/fixmath.git)
 
-## Licence
-See [LICENCE.md](LICENCE.md)
-
-## Copyright
-See [COPYRIGHT.md](COPYRIGHT.md)
-
-## Org
-- src : lib files --> libfixmath.a
+## How to build
 ```bash
-libfixmath_la_SOURCES = fixmath.c      \
-                        fixmath_ver.c  \
-                        fixmath_impl.c \
-                        fixmath_str.c
-
-```
-- tools : matlab files
-- include : API for the lib
-```bash
-fx_include_HEADERS = include/fixmath.h         \
-                     include/fixmath_ver.h     \
-                     include/fixmath_export.h  \
-                     include/fixmath_arch.h    \
-                     include/fixmath_impl.h    \
-                     include/fixmath_macro.h
-```
-- doxygen :  html doc files
-- prof : profiling tool
-```bash
-fixprof.c
-```
-- checktests : test suite
-```bash
-fixtest.c
-```
-
-## Build info
-```bash
-# Major version number
-FX_VERSION=1
-
-# Minor version number
-FX_MINOR=4
-
-Libs: -L${libdir} -lfixmath
-Cflags: -I${includedir}/fixmath
-```
-
-## Make
-```bash
-make all
-make lib
-make doc
-make tst
-make prof
-make install
+mkdir build
+cd build
+cmake ..
+make # make all all
+make fixmath # build the library
+make doc     # doc in html
+make doc; cd latex; make pdf  # doc in pdf
+make checktests;  # the test suite
+make prof    # profiling tool
 ```
