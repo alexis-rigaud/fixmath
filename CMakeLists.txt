@@ -8,14 +8,14 @@ add_compile_definitions(FX_VERSION=${PROJECT_VERSION_MAJOR})
 add_compile_definitions(FX_MINOR=${PROJECT_VERSION_MINOR})
 
 # -- build the library
-add_library(fixmath STATIC
+add_library(fixmath SHARED
     src/fixmath.c
     src/fixmath_ver.c
     src/fixmath_impl.c
     src/fixmath_str.c
 )
-set_target_properties(fixmath PROPERTIES INTERFACE
-    include/fixmath.h
+set_target_properties(fixmath PROPERTIES
+    PUBLIC_HEADER include/fixmath.h
 )
 target_include_directories(fixmath PUBLIC include)
 target_link_libraries(fixmath PUBLIC)
@@ -54,3 +54,10 @@ add_executable(checktests
 target_include_directories(checktests PRIVATE ${Check_INCLUDE_DIR})
 target_link_libraries(checktests PRIVATE ${CHECK_LIB} fixmath)
 target_compile_features(prof PRIVATE c_std_11)
+
+## --- install
+
+install(TARGETS fixmath
+    DESTINATION lib
+    PUBLIC_HEADER DESTINATION include
+)
